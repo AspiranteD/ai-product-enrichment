@@ -1,51 +1,135 @@
 {
-  "Electronics": {
-    "Headphones": "Technology & Electronics > Audio",
-    "Cameras & Photography": "Technology & Electronics > Photography",
-    "Home Entertainment": "Technology & Electronics > Audio & Video",
-    "Computer Accessories": "Technology & Electronics > Computers",
-    "Tablets": "Technology & Electronics > Tablets",
-    "Wearable Technology": "Technology & Electronics > Wearables",
-    "": "Technology & Electronics"
-  },
-  "Home": {
-    "Kitchen & Dining": "Home & Garden > Kitchen",
-    "Bedding": "Home & Garden > Bedroom",
-    "Bath": "Home & Garden > Bathroom",
-    "Storage & Organization": "Home & Garden > Storage",
-    "Lighting": "Construction & Renovation > Electrical & Lighting",
-    "": "Home & Garden"
+  "BISS": {
+    "Electrical": "Construcción y reformas > Electricidad e Iluminación",
+    "Professional Medical": "Industria y agricultura > Industria > Equipamiento industrial",
+    "Industrial Tools & Instruments": "Industria y agricultura > Industria > Herramientas",
+    "Accessories": "Industria y agricultura > Industria > Equipamiento industrial",
+    "Fire Alarms & Security": "Construcción y reformas > Electricidad e Iluminación",
+    "Industrial Electrical Supplies": "Construcción y reformas > Electricidad e Iluminación",
+    "Food Service": "Hogar y jardín > Cocina",
+    "Lab Equipment & Instruments": "Industria y agricultura > Industria > Equipamiento industrial",
+    "Occupational Health & Safety": "Industria y agricultura > Industria > Equipamiento industrial",
+    "Renewable Energy Supplies": "Construcción y reformas > Electricidad e Iluminación",
+    "Additive Manufacturing": "Industria y agricultura > Industria > Equipamiento industrial",
+    "Material Handling": "Industria y agricultura > Industria > Equipamiento industrial",
+    "Flow Control & Filtration": "Industria y agricultura > Industria > Equipamiento industrial",
+    "Janitorial & Sanitation": "Hogar y jardín > Baño y accesorios",
+    "Power Transmission": "Industria y agricultura > Industria > Equipamiento industrial",
+    "Tapes, Adhesives, Lubricants & Chemicals": "Construcción y reformas > Pinturas y barnices",
+    "Education Supplies": "Cine, libros y música > Libros, cómics y revistas",
+    "Plant Care & Pest Control": "Hogar y jardín > Jardín y exteriores > Plantas y jardinería",
+    "Farm & Smallholding": "Industria y agricultura > Agricultura",
+    "Fasteners": "Construcción y reformas > Ferretería",
+    "Household Consumables": "Hogar y jardín > Cocina",
+    "Sports Medicine": "Deporte y ocio > Fitness, running y yoga",
+    "Medical Appliances": "Moda y accesorios > Belleza > Cuidado personal",
+    "Raw Materials": "Construcción y reformas > Madera y otros materiales",
+    "": "Industria y agricultura > Industria"
   },
   "Automotive": {
-    "Accessories": "Industry & Agriculture > Equipment",
-    "Tools & Equipment": "Industry & Agriculture > Tools",
-    "Spare Parts": "Industry & Agriculture > Spare Parts",
-    "": "Industry & Agriculture"
+    "Automotive Accessories": "Industria y agricultura > Industria > Equipamiento industrial",
+    "Automotive Equipment & Tools": "Industria y agricultura > Industria > Herramientas",
+    "Spare & Repair Parts Car & Truck": "Industria y agricultura > Industria > Repuestos de maquinaria",
+    "Wear & Tear Parts Car & Truck": "Industria y agricultura > Industria > Repuestos de maquinaria",
+    "Performance Modification & Customization": "Industria y agricultura > Industria > Repuestos de maquinaria",
+    "Motorbike Accessories & Parts": "Industria y agricultura > Industria > Repuestos de maquinaria",
+    "Body, Trim & Crash Parts": "Industria y agricultura > Industria > Repuestos de maquinaria",
+    "Power Tools": "Construcción y reformas > Herramientas y maquinaria > Herramientas eléctricas",
+    "Transporting & Storage": "Industria y agricultura > Industria > Equipamiento industrial",
+    "Motorcycle Clothing & Helmets": "Deporte y ocio > Otros deportes",
+    "Appearance Chemicals": "Construcción y reformas > Pinturas y barnices",
+    "PBE, Oils and Fluids": "Construcción y reformas > Pinturas y barnices",
+    "Caravanning & Campers": "Deporte y ocio > Otros deportes",
+    "Classic Car Parts": "Industria y agricultura > Industria > Repuestos de maquinaria",
+    "Marine": "Deporte y ocio > Otros deportes",
+    "Lifestyle": "Deporte y ocio > Otros deportes",
+    "Vehicles": "Industria y agricultura > Agricultura > Vehículos",
+    "Lighting": "Construcción y reformas > Electricidad e Iluminación",
+    "Car Electronics": "Tecnología y electrónica > Telefonía: móviles y smartwatches > Accesorios de móviles y smartwatches",
+    "Garden & Landscaping Tools": "Hogar y jardín > Jardín y exteriores > Maquinaria de jardín",
+    "Travel Accessories": "Moda y accesorios > Accesorios",
+    "Cycling": "Bicicletas",
+    "Tires & Rims": "Industria y agricultura > Industria > Repuestos de maquinaria",
+    "": "Industria y agricultura > Industria"
+  },
+  "Home Improvement": {
+    "Plumbing and Bath": "Hogar y jardín > Baño y accesorios",
+    "Power Tools": "Construcción y reformas > Herramientas y maquinaria > Herramientas eléctricas",
+    "Fire Alarms & Security": "Construcción y reformas > Electricidad e Iluminación",
+    "Hand Tools": "Construcción y reformas > Herramientas y maquinaria > Herramientas",
+    "Electrical": "Construcción y reformas > Electricidad e Iluminación",
+    "Hardware": "Construcción y reformas > Ferretería",
+    "Measurement": "Construcción y reformas > Herramientas y maquinaria > Herramientas",
+    "Heaters and Fans": "Hogar y jardín > Calefacción y climatización",
+    "Power Tool Accessories": "Construcción y reformas > Herramientas y maquinaria > Herramientas",
+    "Building Material": "Construcción y reformas > Madera y otros materiales",
+    "Decorating": "Hogar y jardín > Decoración y espejos",
+    "": "Construcción y reformas"
+  },
+  "Electronics": {
+    "Headphones": "Tecnología y electrónica > Audio > Auriculares",
+    "Hi-Fi Speakers": "Tecnología y electrónica > Audio > Altavoces",
+    "Accessories": "Tecnología y electrónica > Informática > Accesorios informática",
+    "Computers": "Tecnología y electrónica > Informática > Ordenadores",
+    "Portable Audio": "Tecnología y electrónica > Audio",
+    "Camera": "Tecnología y electrónica > Fotografía y vídeo > Cámaras",
+    "Security & Surveillance": "Construcción y reformas > Electricidad e Iluminación",
+    "Home Entertainment": "Tecnología y electrónica > TV y proyectores",
+    "GPS & Navigation": "Tecnología y electrónica > Informática > Accesorios informática",
+    "Television": "Tecnología y electrónica > TV y proyectores > Televisores",
+    "Network": "Tecnología y electrónica > Informática > Redes",
+    "Batteries, Chargers & Accessories": "Tecnología y electrónica > Informática > Accesorios informática",
+    "": "Tecnología y electrónica"
+  },
+  "Home": {
+    "Bedding": "Hogar y jardín > Textil del hogar",
+    "Storage": "Hogar y jardín > Muebles > Estanterías y almacenaje",
+    "Bath": "Hogar y jardín > Baño y accesorios",
+    "Kitchen & Dining": "Hogar y jardín > Cocina",
+    "Furniture": "Hogar y jardín > Muebles",
+    "Décor": "Hogar y jardín > Decoración y espejos",
+    "Lighting": "Hogar y jardín > Iluminación",
+    "Cleaning": "Hogar y jardín > Electrodomésticos",
+    "Garden": "Hogar y jardín > Jardín y exteriores",
+    "": "Hogar y jardín"
+  },
+  "Wireless": {
+    "Phones": "Tecnología y electrónica > Telefonía: móviles y smartwatches > Móviles",
+    "Accessories": "Tecnología y electrónica > Telefonía: móviles y smartwatches > Accesorios de móviles y smartwatches",
+    "Smartwatches": "Tecnología y electrónica > Telefonía: móviles y smartwatches > Smartwatches",
+    "": "Tecnología y electrónica > Telefonía: móviles y smartwatches"
   },
   "Sports": {
-    "Exercise & Fitness": "Sports & Leisure > Fitness",
-    "Outdoor Recreation": "Sports & Leisure > Outdoor",
-    "Team Sports": "Sports & Leisure > Team Sports",
-    "": "Sports & Leisure"
+    "Fitness": "Deporte y ocio > Fitness, running y yoga",
+    "Cycling": "Bicicletas",
+    "Water Sports": "Deporte y ocio > Otros deportes",
+    "Camping & Hiking": "Deporte y ocio > Montaña y escalada",
+    "Team Sports": "Deporte y ocio > Otros deportes",
+    "Racket Sports": "Deporte y ocio > Pádel y tenis",
+    "Running": "Deporte y ocio > Fitness, running y yoga",
+    "": "Deporte y ocio"
   },
   "Toys": {
-    "Building Toys": "Kids & Baby > Toys & Games",
-    "Action Figures": "Kids & Baby > Toys & Games",
-    "Dolls": "Kids & Baby > Toys & Games",
-    "": "Kids & Baby > Toys & Games"
-  },
-  "Fashion": {
-    "Women": "Fashion & Accessories > Women",
-    "Men": "Fashion & Accessories > Men",
-    "Jewelry": "Fashion & Accessories > Jewelry",
-    "": "Fashion & Accessories"
-  },
-  "Health & Beauty": {
-    "Personal Care": "Fashion & Accessories > Beauty > Personal Care",
-    "Makeup": "Fashion & Accessories > Beauty > Makeup",
-    "": "Fashion & Accessories > Beauty"
+    "Building & Construction Toys": "Niños y bebés > Juguetes, juegos y peluches",
+    "Dolls & Fashion Toys": "Niños y bebés > Juguetes, juegos y peluches",
+    "Games": "Niños y bebés > Juguetes, juegos y peluches",
+    "Electronic Toys": "Niños y bebés > Juguetes, juegos y peluches",
+    "Educational Toys": "Niños y bebés > Juguetes, juegos y peluches",
+    "": "Niños y bebés > Juguetes, juegos y peluches"
   },
   "Pet Products": {
-    "": "Home & Garden > Pet Supplies"
+    "Dogs": "Hogar y jardín > Artículos para mascotas",
+    "Cats": "Hogar y jardín > Artículos para mascotas",
+    "Fish & Aquatics": "Hogar y jardín > Artículos para mascotas",
+    "Birds": "Hogar y jardín > Artículos para mascotas",
+    "Small Animals": "Hogar y jardín > Artículos para mascotas",
+    "": "Hogar y jardín > Artículos para mascotas"
+  },
+  "Office Product": {
+    "Office Electronics": "Tecnología y electrónica > Informática > Accesorios informática",
+    "Writing & Correction": "Cine, libros y música > Libros, cómics y revistas",
+    "Desk Accessories & Storage": "Hogar y jardín > Muebles > Estanterías y almacenaje",
+    "Paper Products": "Cine, libros y música > Libros, cómics y revistas",
+    "": "Tecnología y electrónica"
   }
 }

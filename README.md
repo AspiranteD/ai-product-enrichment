@@ -1,204 +1,162 @@
 # AI Product Enrichment Pipeline
 
-**Transform raw product data into marketplace-ready listings using AI-powered categorization, description generation, and policy compliance.**
+Production-grade pipeline that transforms raw product data into marketplace-optimized listings using AI. Built to process thousands of items daily across multiple marketplace accounts.
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white)
-![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o-412991?logo=openai&logoColor=white)
-![Tests](https://img.shields.io/badge/Tests-pytest-green?logo=pytest&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+## What It Does
 
----
+Takes a product with basic source data (title, features, department) and produces a complete marketplace-ready listing:
 
-## What it does
+```
+INPUT:  "Sony WH-1000XM5 Wireless Noise Cancelling Headphones"
+        Department: Electronics, Category: Headphones
 
-Takes raw product data (e.g. from Amazon, supplier manifests, or any catalog) and automatically generates everything needed for marketplace listings:
-
-- **Categorization** — Maps source categories to marketplace taxonomy using a 3-tier hierarchy: direct JSON mapping → AI classification → department fallback
-- **Title & description generation** — Produces optimized titles (max 50 chars), keyword-rich descriptions, hashtags, and brand/model extraction via structured OpenAI prompts
-- **Duplicate prevention** — Accepts existing titles from the same store to ensure the AI generates unique titles for identical products
-- **Policy compliance** — Regex-based sanitizer catches 25+ patterns that trigger marketplace policy violations (satellite receivers, spy cameras, exam cheating devices, etc.)
-- **Listing assembly** — Formats the final listing with condition-based headers, structured sections, and keyword blocks
-
-Built from a production system processing **5,000+ products** across multiple marketplace accounts.
+OUTPUT: Title:       "Sony WH-1000XM5 auriculares bluetooth"
+        Description: "Auriculares inalámbricos Sony con cancelación de ruido..."
+        Category:    "Tecnología y electrónica > Audio > Auriculares"
+        Keywords:    "auriculares,bluetooth,inalámbrico,música,sonido"
+        Hashtags:    "#sony,#auriculares,#bluetooth,#musica,#telovendo"
+        Brand:       "Sony"
+        Model:       "WH-1000XM5"
+```
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    subgraph input [Input]
-        Raw[Raw Product Data]
-    end
-
-    subgraph pipeline [Enrichment Pipeline]
-        direction TB
-        Cat[Category Mapper]
-        Desc[Description Generator]
-        Sanitizer[Policy Sanitizer]
-        Builder[Listing Builder]
-    end
-
-    subgraph ai [AI Layer]
-        OpenAI[OpenAI API]
-        Mapping[JSON Mappings]
-    end
-
-    subgraph output [Output]
-        Listing[Marketplace-Ready Listing]
-    end
-
-    Raw --> Cat
-    Cat --> Desc
-    Desc --> Sanitizer
-    Sanitizer --> Builder
-    Builder --> Listing
-
-    Mapping -.-> Cat
-    OpenAI -.-> Cat
-    OpenAI -.-> Desc
+```
+┌──────────────────────────────────────────────────────┐
+│                 EnrichmentPipeline                   │
+│                                                      │
+│  ┌─────────┐  ┌──────────────┐  ┌─────────────────┐ │
+│  │ Stage 1 │→ │   Stage 2    │→ │    Stage 3      │ │
+│  │ Scrape  │  │ Categorize   │  │ Generate Content│ │
+│  │         │  │              │  │                 │ │
+│  │ External│  │ 1.JSON map   │  │ OpenAI API      │ │
+│  │ data    │  │ 2.AI (OpenAI)│  │ - Title (50ch)  │ │
+│  │ fetch   │  │ 3.Fallback   │  │ - Description   │ │
+│  │         │  │              │  │ - Keywords      │ │
+│  │ Retry   │  │ 600+ mapping │  │ - Brand/Model   │ │
+│  │ tracking│  │ rules        │  │ - Hashtags      │ │
+│  └─────────┘  └──────────────┘  └─────────────────┘ │
+│                                          │           │
+│  ┌─────────────────┐  ┌─────────────────┐│           │
+│  │    Stage 4      │  │ Policy Sanitizer ││           │
+│  │ Update Listings │  │                 ││           │
+│  │                 │  │ 30+ regex rules ││           │
+│  │ Only empty      │  │ TV/TDT, spy cam ││           │
+│  │ fields (idem-   │  │ exam earpiece   ││           │
+│  │ potent writes)  │  │ GPS trackers    ││           │
+│  └─────────────────┘  └─────────────────┘│           │
+└──────────────────────────────────────────────────────┘
 ```
 
-## Features
+## Key Design Decisions
 
-- **Idempotent pipeline** — Only writes empty fields, never overwrites existing data. Safe to re-run on the same products.
-- **3-tier categorization** — Direct mapping (instant, free) → AI classification (accurate, costs tokens) → fallback (always succeeds). Optimizes for both cost and accuracy.
-- **Structured JSON output** — Uses OpenAI's `response_format: json_object` for reliable parsing, no fragile regex on LLM output.
-- **Title deduplication** — Pass existing titles and the AI will generate distinct titles for identical products (different model numbers, capacities, etc.).
-- **25+ policy rules** — Regex patterns ordered longest-first to avoid partial matches. Handles Spanish marketplace-specific terms.
-- **Condition-aware formatting** — Listings automatically get emoji prefixes and warning blocks based on product condition (perfect/damaged/for parts).
-- **Framework-agnostic** — Works with any data source: ORM models, dicts, dataclasses, `SimpleNamespace`. No database dependency.
+### Three-Tier Categorization
+Not every item needs an AI call. The system checks a 600+ rule JSON mapping first (covers ~80% of items at zero cost), falls back to AI classification, and guarantees a category via department-level fallback. This reduced our OpenAI spend by ~80%.
 
-## Quick start
+### Title Deduplication
+When multiple items share the same SKU (e.g., same product in different conditions), the pipeline queries existing titles and instructs the AI to differentiate — by including model numbers, capacities, voltages, or other unique attributes. This prevents duplicate listings that confuse buyers.
 
-```bash
-git clone https://github.com/AspiranteD/ai-product-enrichment.git
-cd ai-product-enrichment
-pip install -r requirements.txt
-cp .env.example .env  # add your OpenAI API key
+### Idempotent Writes
+Every stage only writes to empty fields and never overwrites existing data. This makes the pipeline safe to re-run on partially enriched items, and ensures manual edits are preserved.
+
+### Policy Compliance Sanitizer
+Marketplaces auto-reject listings with certain terms. The sanitizer uses 30+ regex rules (ordered by phrase length to avoid partial matches) to replace flagged terms:
+- "receptor satélite" → "sintonizador TDT" (not just "satélite" → "TDT")
+- "pinganillo invisible para examen" → "auricular bluetooth mini"
+- "cámara espía" → "cámara mini"
+- "desbloqueado" → "libre"
+
+### Pluggable Architecture
+The pipeline accepts functions for data access (scraping, title lookup, listing update) so the core logic is database-agnostic. This makes it testable without a database and reusable across different storage backends.
+
+## Project Structure
+
 ```
-
-Run the example:
-
-```bash
-export OPENAI_API_KEY=sk-...
-python examples/enrich_product.py
-```
-
-Run tests (no API key needed — all AI calls are mocked):
-
-```bash
-pytest tests/ -v
+├── src/
+│   ├── enrichment/
+│   │   ├── pipeline.py              # 4-stage orchestrator (250+ lines)
+│   │   ├── category_mapper.py       # 3-tier classification (170+ lines)
+│   │   ├── description_generator.py # AI content generation (140+ lines)
+│   │   ├── policy_sanitizer.py      # Regex compliance engine (90+ lines)
+│   │   ├── listing_builder.py       # Field mapping + idempotent writes
+│   │   └── openai_client.py         # JSON/text API wrapper
+│   └── cli/
+│       ├── generate_descriptions.py # Batch description CLI
+│       └── categorize_items.py      # Batch categorization CLI
+├── data/
+│   ├── category_mapping.json        # 600+ direct mapping rules
+│   └── category_taxonomy.json       # Full marketplace category tree
+├── tests/
+│   ├── test_pipeline.py             # 20+ pipeline stage tests
+│   ├── test_category_mapper.py      # 3-tier hierarchy tests
+│   ├── test_description_generator.py# AI generation + truncation tests
+│   ├── test_policy_sanitizer.py     # 30+ sanitization rule tests
+│   └── test_listing_builder.py      # Field mapping + idempotency tests
+└── examples/
+    ├── enrich_single_item.py        # Full pipeline demo
+    └── batch_categorize.py          # Batch categorization with stats
 ```
 
 ## Usage
 
-### Full pipeline
+### Quick Start
+
+```bash
+pip install -r requirements.txt
+cp .env.example .env  # Add your OpenAI API key
+```
+
+### Run Tests
+
+```bash
+python -m pytest tests/ -v
+```
+
+### Single Item Enrichment
 
 ```python
-from types import SimpleNamespace
-from src.enrichment import enrich_item
+from src.enrichment.pipeline import EnrichmentPipeline, PipelineConfig
 
-product = SimpleNamespace(
-    product_id="B08N5WRWNW",
-    source_description="Sony WH-1000XM4 Wireless Noise Canceling Headphones",
-    source_features="30-hour battery; Touch controls; Speak-to-Chat",
-    source_department="Electronics",
-    source_category="Headphones",
-    source_subcategory="Over-Ear",
-    marketplace_category=None,
-    marketplace_title=None,
-    marketplace_description=None,
-    keywords=None,
-    short_description=None,
-    related_keywords=None,
-    hashtags=None,
-    brand=None,
-    model=None,
-    color=None,
+config = PipelineConfig(
+    scrape_fn=your_scraper,
+    get_existing_titles_fn=your_title_lookup,
+    update_listing_fn=your_listing_updater,
 )
 
-result = enrich_item(product)
-# result = {"product_id": "B08N5WRWNW", "categorization": "ok", "description": "ok", "success": True, ...}
-# product.marketplace_title = "Sony WH-1000XM4 auriculares inalámbricos"
-# product.brand = "Sony"
-# product.model = "WH-1000XM4"
+pipeline = EnrichmentPipeline(config)
+result = pipeline.enrich(item, item_id="LPN-001")
+# result.scraping → "ok" | "skipped" | "failed" | "max_attempts"
+# result.categorization → "ok" | "skipped" | "no_data" | "failed"
+# result.description → "ok" | "skipped" | "no_data" | "failed"
 ```
 
-### Individual components
+### Batch Processing
 
 ```python
-from src.enrichment import CategoryMapper, generate_listing_content, sanitize_text
+from src.cli.generate_descriptions import run_batch, BatchConfig
 
-# Categorize
-mapper = CategoryMapper()
-category = mapper.classify("Electronics", "Headphones", description="Wireless noise canceling")
-
-# Generate content
-content = generate_listing_content(
-    description="Sony WH-1000XM4 Premium Noise Canceling Headphones",
-    features="30-hour battery; LDAC; Multipoint",
-    existing_titles=["Sony WH-1000XM4 auriculares Bluetooth"],  # avoid duplicates
+stats = run_batch(
+    items=pending_items,
+    config=BatchConfig(delay=1.5, commit_batch_size=10),
+    get_existing_titles_fn=title_lookup,
+    commit_fn=lambda n: session.commit(),
 )
-
-# Sanitize for policy compliance
-clean = sanitize_text("Receptor satélite HD decodificador IPTV")
-# -> "sintonizador TDT HD sintonizador televisión"
+print(stats.summary())  # "45 OK / 2 FAIL / 3 SKIP / 50 total"
 ```
 
-## Project structure
+### Policy Check
 
-```
-ai-product-enrichment/
-├── src/
-│   └── enrichment/
-│       ├── pipeline.py              # Orchestrator (enrich_item)
-│       ├── category_mapper.py       # 3-tier categorization
-│       ├── description_generator.py # OpenAI content generation
-│       ├── listing_builder.py       # Formatted listing assembly
-│       ├── policy_sanitizer.py      # Regex-based compliance filter
-│       └── openai_client.py         # Reusable OpenAI wrapper
-├── data/
-│   ├── category_mapping.json        # Direct mapping table
-│   └── category_taxonomy.json       # Marketplace category tree
-├── tests/
-│   ├── test_pipeline.py
-│   ├── test_category_mapper.py
-│   ├── test_policy_sanitizer.py
-│   └── test_listing_builder.py
-├── examples/
-│   └── enrich_product.py
-├── .env.example
-└── requirements.txt
+```python
+from src.enrichment.policy_sanitizer import sanitize_text, has_risk_word
+
+if has_risk_word(title, description):
+    title = sanitize_text(title, for_title=True)  # Truncates to 50 chars
+    description = sanitize_text(description)
 ```
 
-## Design decisions
+## Tech Stack
 
-**Why a 3-tier categorization hierarchy?**
-Direct JSON mapping handles 70% of products instantly (free, deterministic). AI handles the remaining 30% that need semantic understanding. Fallback ensures 100% coverage — no product ever fails to categorize. This reduced our OpenAI costs by ~70% vs. classifying everything with AI.
-
-**Why regex-based policy sanitization instead of AI?**
-Marketplace policy violations are deterministic — "satellite receiver" is always a problem. Regex is instant, free, and testable. Using AI for this would add latency, cost, and non-determinism for a problem that doesn't need it.
-
-**Why structured JSON output from OpenAI?**
-Using `response_format: json_object` eliminates the need to parse free-text responses. No regex extraction, no "please format as JSON" prompt hacks. The response is always valid JSON or an API error — no in-between states to handle.
-
-**Why idempotent steps?**
-In production, enrichment runs on thousands of products via a scheduled queue. If a step fails mid-batch, re-running the entire batch must be safe. Each step checks if its output fields are already populated and skips if so.
-
-## Built with
-
-- **Python 3.11+** — Type hints, structural pattern matching
-- **OpenAI API** — GPT-4o-mini for categorization and description generation
-- **pytest** — Unit tests with mocked AI calls
-
-## Part of a larger system
-
-This enrichment pipeline is one component of a multi-marketplace e-commerce automation system that includes:
-
-- [**amazon-product-scraper**](https://github.com/AspiranteD/amazon-product-scraper) — Feeds raw product data into this pipeline
-- [**wallapop-data-extractors**](https://github.com/AspiranteD/wallapop-data-extractors) — Extracts orders, chats, and listings from marketplace APIs
-- [**ebay-automation-toolkit**](https://github.com/AspiranteD/ebay-automation-toolkit) — Bulk listing and order management via eBay APIs
-- [**marketplace-sync-engine**](https://github.com/AspiranteD/marketplace-sync-engine) — Cross-platform inventory synchronization
-
-## License
-
-MIT
+- **Python 3.11+**
+- **OpenAI API** (gpt-4o-mini) — JSON structured output for content generation, text mode for classification
+- **Regex engine** — 30+ compiled patterns for policy compliance
+- **pytest** — 60+ unit tests with mocked API calls

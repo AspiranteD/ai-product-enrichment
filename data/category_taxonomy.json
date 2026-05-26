@@ -1,64 +1,125 @@
 {
-  "Technology & Electronics": {
-    "Audio": {},
-    "Audio & Video": {},
-    "Photography": {},
-    "Computers": {},
-    "Tablets": {},
-    "Wearables": {},
-    "Mobile Phones": {},
-    "Gaming": {},
-    "Smart Home": {}
-  },
-  "Home & Garden": {
-    "Kitchen": {},
-    "Bedroom": {},
-    "Bathroom": {},
-    "Storage": {},
-    "Garden & Outdoor": {},
-    "Furniture": {},
-    "Decoration": {},
-    "Pet Supplies": {}
-  },
-  "Fashion & Accessories": {
-    "Women": {},
-    "Men": {},
-    "Jewelry": {},
-    "Watches": {},
-    "Bags & Backpacks": {},
-    "Beauty": {
-      "Personal Care": {},
-      "Makeup": {},
-      "Fragrance": {}
+  "Tecnología y electrónica": {
+    "Informática": {
+      "Ordenadores": {},
+      "Portátiles": {},
+      "Tablets": {},
+      "Accesorios informática": {},
+      "Redes": {},
+      "Componentes": {}
+    },
+    "Telefonía: móviles y smartwatches": {
+      "Móviles": {},
+      "Smartwatches": {},
+      "Accesorios de móviles y smartwatches": {}
+    },
+    "Audio": {
+      "Auriculares": {},
+      "Altavoces": {},
+      "Equipos de música": {}
+    },
+    "TV y proyectores": {
+      "Televisores": {},
+      "Proyectores": {},
+      "Accesorios TV": {}
+    },
+    "Fotografía y vídeo": {
+      "Cámaras": {},
+      "Objetivos": {},
+      "Accesorios foto y vídeo": {}
+    },
+    "Consolas y videojuegos": {
+      "Consolas": {},
+      "Videojuegos": {},
+      "Accesorios gaming": {}
     }
   },
-  "Sports & Leisure": {
-    "Fitness": {},
-    "Outdoor": {},
-    "Team Sports": {},
-    "Cycling": {},
-    "Water Sports": {}
+  "Hogar y jardín": {
+    "Muebles": {
+      "Sofás y sillones": {},
+      "Mesas": {},
+      "Sillas": {},
+      "Estanterías y almacenaje": {},
+      "Camas y colchones": {}
+    },
+    "Electrodomésticos": {
+      "Grandes electrodomésticos": {},
+      "Pequeño electrodoméstico": {},
+      "Aspiradoras y limpieza": {}
+    },
+    "Cocina": {},
+    "Baño y accesorios": {},
+    "Decoración y espejos": {},
+    "Iluminación": {},
+    "Textil del hogar": {},
+    "Calefacción y climatización": {},
+    "Jardín y exteriores": {
+      "Muebles de jardín": {},
+      "Maquinaria de jardín": {},
+      "Plantas y jardinería": {},
+      "Piscinas y accesorios": {}
+    },
+    "Artículos para mascotas": {}
   },
-  "Kids & Baby": {
-    "Toys & Games": {},
-    "Baby Gear": {},
-    "Children Clothing": {}
+  "Moda y accesorios": {
+    "Hombre": {
+      "Ropa": {},
+      "Calzado": {},
+      "Accesorios": {}
+    },
+    "Mujer": {
+      "Ropa": {},
+      "Calzado": {},
+      "Accesorios": {}
+    },
+    "Belleza": {
+      "Perfumes": {},
+      "Cuidado personal": {},
+      "Maquillaje": {}
+    },
+    "Accesorios": {},
+    "Relojes y joyería": {}
   },
-  "Industry & Agriculture": {
-    "Equipment": {},
-    "Tools": {},
-    "Spare Parts": {},
-    "Agriculture": {}
+  "Deporte y ocio": {
+    "Fitness, running y yoga": {},
+    "Pádel y tenis": {},
+    "Montaña y escalada": {},
+    "Otros deportes": {}
   },
-  "Construction & Renovation": {
-    "Electrical & Lighting": {},
-    "Plumbing": {},
-    "Hardware": {},
-    "Power Tools": {}
+  "Construcción y reformas": {
+    "Herramientas y maquinaria": {
+      "Herramientas": {},
+      "Herramientas eléctricas": {},
+      "Maquinaria": {}
+    },
+    "Ferretería": {},
+    "Electricidad e Iluminación": {},
+    "Pinturas y barnices": {},
+    "Fontanería": {},
+    "Madera y otros materiales": {}
   },
-  "Books & Media": {
-    "Books": {},
-    "Music": {},
-    "Movies": {}
-  }
+  "Industria y agricultura": {
+    "Industria": {
+      "Equipamiento industrial": {},
+      "Herramientas": {},
+      "Repuestos de maquinaria": {}
+    },
+    "Agricultura": {
+      "Vehículos": {},
+      "Maquinaria agrícola": {}
+    }
+  },
+  "Niños y bebés": {
+    "Ropa infantil": {},
+    "Juguetes, juegos y peluches": {},
+    "Transporte del bebé": {},
+    "Mobiliario infantil": {}
+  },
+  "Cine, libros y música": {
+    "Libros, cómics y revistas": {},
+    "Películas y series": {},
+    "Música y vinilos": {},
+    "Instrumentos musicales": {}
+  },
+  "Bicicletas": {}
 }

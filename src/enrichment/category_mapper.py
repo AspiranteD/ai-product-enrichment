@@ -1,12 +1,16 @@
 """
-AI-powered product category mapper.
+Three-tier product categorization for marketplace listings.
 
 Classification hierarchy:
-  1. Direct mapping via JSON lookup tables
-  2. AI classification via OpenAI
-  3. Fallback by source department
+1. Direct mapping — JSON lookup from source department/category to marketplace category.
+   Covers ~80% of items with zero API cost.
+2. AI classification — OpenAI call with the full category taxonomy as context.
+   Used when no mapping exists. Costs ~$0.001 per item.
+3. Department fallback — Hardcoded map from source department to a safe default.
+   Guarantees every item gets a category.
 
-Supports any marketplace category taxonomy via configurable JSON files.
+The category taxonomy is loaded from a JSON tree and flattened into valid
+leaf paths (e.g., "Hogar y jardín > Cocina > Pequeño electrodoméstico").
 """
 import json
 import logging
@@ -17,35 +21,38 @@ from . import openai_client
 
 logger = logging.getLogger(__name__)
 
-_DATA_DIR = Path(__file__).parent.parent.parent / "data"
+_DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
 
 INVALID_RESPONSES = [
-    "no description",
     "no hay descripción",
-    "please provide",
-    "cannot classify",
-    "not provided",
+    "no hay descripcion",
+    "por favor, proporciona",
+    "no se puede clasificar",
+    "no proporcionada",
 ]
 
-FALLBACK_MAP = {
-    "Home": "Home & Garden",
-    "Pet Products": "Home & Garden > Pet Supplies",
-    "Wireless": "Technology & Electronics",
-    "Camera": "Technology & Electronics",
-    "Home Entertainment": "Technology & Electronics",
-    "Electronics": "Technology & Electronics",
-    "Office Product": "Technology & Electronics",
-    "Automotive": "Industry & Agriculture",
-    "Sports": "Sports & Leisure",
-    "Fashion": "Fashion & Accessories",
-    "Health & Beauty": "Fashion & Accessories > Beauty",
-    "Toys": "Kids & Baby > Toys & Games",
-    "": "Home & Garden",
+DEPARTMENT_FALLBACK = {
+    "Home": "Hogar y jardín",
+    "Pet Products": "Hogar y jardín > Artículos para mascotas",
+    "Wireless": "Tecnología y electrónica",
+    "Camera": "Tecnología y electrónica",
+    "Home Entertainment": "Tecnología y electrónica",
+    "Electronics": "Tecnología y electrónica",
+    "Office Product": "Tecnología y electrónica",
+    "Automotive": "Industria y agricultura",
+    "Sports": "Deporte y ocio",
+    "Fashion": "Moda y accesorios",
+    "Health & Beauty": "Moda y accesorios > Belleza",
+    "Toys": "Niños y bebés > Juguetes, juegos y peluches",
+    "": "Hogar y jardín",
 }
 
 
 class CategoryMapper:
-    """Maps source product categories to marketplace-specific categories."""
+    """
+    Maps source department/category pairs to marketplace categories
+    using a three-tier classification strategy.
+    """
 
     def __init__(
         self,
@@ -58,27 +65,32 @@ class CategoryMapper:
         self.mapping = self._load_json(mapping_path)
         taxonomy = self._load_json(taxonomy_path)
         self.top_level_categories = list(taxonomy.keys())
-        self.valid_paths = self._flatten_paths(taxonomy)
+        self.valid_paths = self._flatten_taxonomy(taxonomy)
 
     @staticmethod
     def _load_json(path: Path) -> dict:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
 
-    def _flatten_paths(self, node: dict, path: list | None = None) -> list[str]:
-        """Recursively flatten the taxonomy tree into 'Cat > Subcat > ...' paths."""
-        path = path or []
+    def _flatten_taxonomy(self, node: dict, prefix: list | None = None) -> list[str]:
+        """Recursively flatten the category tree into '>' separated leaf paths."""
+        prefix = prefix or []
         paths: list[str] = []
         for cat, sub in node.items():
-            current = path + [cat]
+            current = prefix + [cat]
             if sub:
-                paths += self._flatten_paths(sub, current)
+                paths += self._flatten_taxonomy(sub, current)
             else:
                 paths.append(" > ".join(current))
         return paths
 
     def get_mapped_category(self, department: str, category: str) -> Optional[str]:
-        """Attempt direct lookup in the mapping table."""
+        """
+        Tier 1: Direct JSON lookup.
+
+        Checks department+category first, then department default (empty string key).
+        Returns None if no mapping exists.
+        """
         if not department or department not in self.mapping:
             return None
         dept_map = self.mapping[department]
@@ -96,8 +108,14 @@ class CategoryMapper:
         description: str = "",
         features: str = "",
     ) -> Optional[str]:
-        """Use OpenAI to classify the product into the taxonomy."""
-        full_description = "; ".join([
+        """
+        Tier 2: AI classification using OpenAI.
+
+        Sends the full product context along with the available category
+        taxonomy. Temperature is set to 0.1 for deterministic output.
+        Returns a "Category > Subcategory" path string.
+        """
+        product_context = "; ".join([
             description.strip(),
             features.strip(),
             f"Department: {department}",
@@ -106,24 +124,24 @@ class CategoryMapper:
         ])
 
         prompt = f"""
-**Context**: You are a product classifier for an online marketplace.
-**Instructions**:
-1. Identify the TOP-LEVEL CATEGORY that best describes the product.
-2. Then select the MOST APPROPRIATE SUBCATEGORY.
-3. Use EXCLUSIVELY categories from this list:
+**Contexto**: Eres un clasificador de productos para marketplace. 
+**Instrucciones**:
+1. Identifica la CATEGORÍA PRINCIPAL que mejor describa el producto.
+2. Luego selecciona la SUBCATEGORÍA MÁS APROPIADA.
+3. Usa EXCLUSIVAMENTE categorías de esta lista:
 
-**Available top-level categories**:
+**Categorías principales disponibles**:
 {chr(10).join(f"- {cat}" for cat in self.top_level_categories)}
 
-**Rules**:
-- Getting the top-level category right is MORE IMPORTANT than the exact subcategory.
-- If unsure about the subcategory, pick a general one but keep the top-level correct.
-- DO NOT invent new categories.
-- Format: "Category > Subcategory" (2 levels are sufficient)
+**Reglas**:
+- Es MÁS IMPORTANTE que la categoría principal sea correcta que la subcategoría exacta.
+- Si no estás seguro de la subcategoría, elige una general pero mantén la categoría principal correcta.
+- NO inventes categorías nuevas.
+- Formato: "Categoría > Subcategoría" (2 niveles son suficientes)
 
-**Product description**: {full_description}
+**Descripción del producto**: {product_context}
 
-**Response** (category path only, no explanations):
+**Respuesta** (solo la ruta de categoría, sin explicaciones):
 """
         return openai_client.chat_text(prompt, temperature=0.1, max_tokens=100)
 
@@ -137,8 +155,12 @@ class CategoryMapper:
         use_ai: bool = True,
     ) -> str:
         """
-        Classify a product. Hierarchy: direct mapping -> AI -> fallback.
-        Always returns a non-empty string.
+        Classify a product through the three-tier hierarchy.
+
+        Always returns a non-empty string:
+        1. Direct mapping (free, instant)
+        2. AI classification (costs ~$0.001, ~1s latency)
+        3. Department fallback (free, instant, less precise)
         """
         department = (department or "").strip()
         category = (category or "").strip()
@@ -161,12 +183,13 @@ class CategoryMapper:
                 return ai_result
             logger.warning("AI returned invalid response: %s", ai_result)
 
-        fallback = FALLBACK_MAP.get(department, FALLBACK_MAP[""])
+        fallback = DEPARTMENT_FALLBACK.get(department, DEPARTMENT_FALLBACK[""])
         logger.warning("Fallback for '%s': %s", department, fallback)
         return fallback
 
     @staticmethod
     def _is_invalid(value: str) -> bool:
+        """Check if AI response is a refusal or error message."""
         if not value:
             return True
         v = value.strip().lower()
