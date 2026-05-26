@@ -21,39 +21,39 @@ def main():
     items = [
         SimpleNamespace(
             id="ITEM-001",
-            source_department="Electronics",
-            source_category="Headphones",
-            source_subcategory="Over-Ear",
-            source_description="Sony WH-1000XM5 Noise Cancelling Headphones",
-            source_features="30h battery, Bluetooth 5.2",
-            marketplace_category=None,
+            amazon_department="Electronics",
+            amazon_category="Headphones",
+            amazon_subcategory="Over-Ear",
+            amazon_description="Sony WH-1000XM5 Noise Cancelling Headphones",
+            amazon_features="30h battery, Bluetooth 5.2",
+            wallapop_category=None,
         ),
         SimpleNamespace(
             id="ITEM-002",
-            source_department="Home Improvement",
-            source_category="Power Tools",
-            source_subcategory="Drills",
-            source_description="Bosch Professional GSR 18V-60 FC Cordless Drill",
-            source_features="18V, 60Nm torque, FlexiClick system",
-            marketplace_category=None,
+            amazon_department="Home Improvement",
+            amazon_category="Power Tools",
+            amazon_subcategory="Drills",
+            amazon_description="Bosch Professional GSR 18V-60 FC Cordless Drill",
+            amazon_features="18V, 60Nm torque, FlexiClick system",
+            wallapop_category=None,
         ),
         SimpleNamespace(
             id="ITEM-003",
-            source_department="Pet Products",
-            source_category="Dogs",
-            source_subcategory="Beds",
-            source_description="Orthopedic Dog Bed Large",
-            source_features="Memory foam, washable cover",
-            marketplace_category=None,
+            amazon_department="Pet Products",
+            amazon_category="Dogs",
+            amazon_subcategory="Beds",
+            amazon_description="Orthopedic Dog Bed Large",
+            amazon_features="Memory foam, washable cover",
+            wallapop_category=None,
         ),
         SimpleNamespace(
             id="ITEM-004",
-            source_department="NewDepartment",
-            source_category="UnknownCategory",
-            source_subcategory="",
-            source_description="Some mysterious product from a new department",
-            source_features="",
-            marketplace_category=None,
+            amazon_department="NewDepartment",
+            amazon_category="UnknownCategory",
+            amazon_subcategory="",
+            amazon_description="Some mysterious product from a new department",
+            amazon_features="",
+            wallapop_category=None,
         ),
     ]
 
@@ -73,7 +73,7 @@ def main():
 
     print("\nITEM CATEGORIES:")
     for item in items:
-        print(f"  {item.id}: {item.marketplace_category}")
+        print(f"  {item.id}: {item.wallapop_category}")
 
 
 if __name__ == "__main__":

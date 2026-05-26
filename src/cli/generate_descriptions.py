@@ -74,7 +74,7 @@ def run_batch(
     if config.dry_run:
         for i, item in enumerate(items, 1):
             missing = [f for f in ENRICHMENT_FIELDS if not getattr(item, f, None)]
-            desc = (getattr(item, "source_description", "") or "")[:50]
+            desc = (getattr(item, "amazon_description", "") or "")[:50]
             item_id = getattr(item, "id", getattr(item, "lpn", f"item-{i}"))
             logger.info(
                 "  [%d] ID=%s desc='%s...' missing=%s",
@@ -86,19 +86,19 @@ def run_batch(
     batch_count = 0
 
     for i, item in enumerate(items, 1):
-        desc = (getattr(item, "source_description", "") or "").strip()
-        features = (getattr(item, "source_features", "") or "").strip()
-        sku = (getattr(item, "sku", "") or "").strip()
+        desc = (getattr(item, "amazon_description", "") or "").strip()
+        features = (getattr(item, "amazon_features", "") or "").strip()
+        asin = (getattr(item, "asin", "") or "").strip()
         item_id = getattr(item, "id", getattr(item, "lpn", f"item-{i}"))
 
         logger.info("[%d/%d] ID=%s - '%s...'", i, stats.total, item_id, desc[:60])
 
         existing_titles: list[str] = []
-        if sku and get_existing_titles_fn:
-            existing_titles = get_existing_titles_fn(sku, item)
+        if asin and get_existing_titles_fn:
+            existing_titles = get_existing_titles_fn(asin, item)
 
         enrichment = generate_listing_content(
-            desc, features, sku=sku,
+            desc, features, sku=asin,
             existing_titles=existing_titles or None,
         )
 

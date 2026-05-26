@@ -55,17 +55,17 @@ def update_listing(item, title: str, description: str):
 def main():
     item = SimpleNamespace(
         id="LPN-00123",
-        sku="B0BX2K9GQ6",
-        source_description=None,
-        source_features=None,
-        source_department="Electronics",
-        source_category="Headphones",
-        source_subcategory="Over-Ear",
+        asin="B0BX2K9GQ6",
+        amazon_description=None,
+        amazon_features=None,
+        amazon_department="Electronics",
+        amazon_category="Headphones",
+        amazon_subcategory="Over-Ear",
         image_urls=None,
         scraped_price=None,
         scraping_attempts=0,
         scraping_needs_manual=False,
-        marketplace_category=None,
+        wallapop_category=None,
         wallapop_title=None,
         wallapop_description=None,
         keywords=None,
@@ -95,7 +95,7 @@ def main():
         print(f"  {key}: {value}")
 
     print("\nENRICHED ITEM:")
-    print(f"  Category:    {item.marketplace_category}")
+    print(f"  Category:    {item.wallapop_category}")
     print(f"  Title:       {item.wallapop_title}")
     print(f"  Description: {item.wallapop_description}")
     print(f"  Keywords:    {item.keywords}")

@@ -1,125 +1,364 @@
 {
-  "Tecnología y electrónica": {
-    "Informática": {
-      "Ordenadores": {},
-      "Portátiles": {},
-      "Tablets": {},
-      "Accesorios informática": {},
-      "Redes": {},
-      "Componentes": {}
-    },
-    "Telefonía: móviles y smartwatches": {
-      "Móviles": {},
-      "Smartwatches": {},
-      "Accesorios de móviles y smartwatches": {}
-    },
-    "Audio": {
-      "Auriculares": {},
-      "Altavoces": {},
-      "Equipos de música": {}
-    },
-    "TV y proyectores": {
-      "Televisores": {},
-      "Proyectores": {},
-      "Accesorios TV": {}
-    },
-    "Fotografía y vídeo": {
-      "Cámaras": {},
-      "Objetivos": {},
-      "Accesorios foto y vídeo": {}
-    },
-    "Consolas y videojuegos": {
-      "Consolas": {},
-      "Videojuegos": {},
-      "Accesorios gaming": {}
-    }
-  },
-  "Hogar y jardín": {
-    "Muebles": {
-      "Sofás y sillones": {},
-      "Mesas": {},
-      "Sillas": {},
-      "Estanterías y almacenaje": {},
-      "Camas y colchones": {}
-    },
-    "Electrodomésticos": {
-      "Grandes electrodomésticos": {},
-      "Pequeño electrodoméstico": {},
-      "Aspiradoras y limpieza": {}
-    },
-    "Cocina": {},
-    "Baño y accesorios": {},
-    "Decoración y espejos": {},
-    "Iluminación": {},
-    "Textil del hogar": {},
-    "Calefacción y climatización": {},
-    "Jardín y exteriores": {
-      "Muebles de jardín": {},
-      "Maquinaria de jardín": {},
-      "Plantas y jardinería": {},
-      "Piscinas y accesorios": {}
-    },
-    "Artículos para mascotas": {}
-  },
   "Moda y accesorios": {
-    "Hombre": {
-      "Ropa": {},
-      "Calzado": {},
-      "Accesorios": {}
-    },
     "Mujer": {
       "Ropa": {},
-      "Calzado": {},
-      "Accesorios": {}
+      "Calzado": {}
+    },
+    "Hombre": {
+      "Ropa": {},
+      "Calzado": {}
+    },
+    "Accesorios": {
+      "Bolsos y mochilas": {},
+      "Cinturones": {},
+      "Gafas de sol": {},
+      "Guantes": {},
+      "Accesorios para el cabello": {},
+      "Sombreros y gorras": {},
+      "Bufandas y chales": {},
+      "Corbatas y pañuelos": {},
+      "Paraguas": {},
+      "Relojes": {},
+      "Otros accesorios": {}
+    },
+    "Joyería": {
+      "Tobilleras": {},
+      "Cuentas": {},
+      "Pulseras": {},
+      "Broches": {},
+      "Cadenas": {},
+      "Gemelos": {},
+      "Pendientes": {},
+      "Conjuntos de joyas": {},
+      "Joyeros": {},
+      "Collares": {},
+      "Colgantes": {},
+      "Piercings": {},
+      "Anillos": {},
+      "Otras joyas": {}
     },
     "Belleza": {
-      "Perfumes": {},
+      "Colonia": {},
+      "Maquillaje": {},
+      "Perfume": {},
       "Cuidado personal": {},
-      "Maquillaje": {}
+      "Utensilios y accesorios": {},
+      "Otros productos de belleza": {}
+    }
+  },
+  "Inmobiliaria": {},
+  "Tecnología y electrónica": {
+    "Imagen: televisores y proyectores": {
+      "TV": {},
+      "Proyectores": {},
+      "Accesorios de televisores y proyectores": {},
+      "Otros artículos de imagen": {}
     },
-    "Accesorios": {},
-    "Relojes y joyería": {}
+    "Sonido: auriculares y altavoces": {
+      "Auriculares": {},
+      "Altavoces": {},
+      "Home cinema y barras de sonido": {},
+      "Dispositivos de sonido": {},
+      "Tocadiscos": {},
+      "DJ y audio profesional": {},
+      "Otros dispositivos de sonido": {}
+    },
+    "Fotografía: cámaras y drones": {
+      "Cámaras": {},
+      "Objetivos": {},
+      "Drones": {},
+      "Accesorios de fotografía": {},
+      "Cámaras de vigilancia": {},
+      "Otros articulos de fotografía": {}
+    },
+    "Telefonía: móviles y smartwatches": {
+      "Smartphones": {},
+      "Smartwatches y pulsera de actividad": {},
+      "Teléfonos vintage": {},
+      "Telefonos fijos": {},
+      "Otros teléfonos": {},
+      "Accesorios de móviles y smartwatches": {}
+    },
+    "Informática: ordenadores y tablets": {
+      "Portátiles": {},
+      "Ordenadores de sobremesa": {},
+      "Realidad Virtual y aumentada": {},
+      "Tablets": {},
+      "E-readers": {},
+      "Periféricos": {},
+      "Componentes y piezas de ordenador": {},
+      "Accesorios de informática": {}
+    },
+    "Gaming: consolas y videojuegos": {
+      "Consolas y accesorios": {},
+      "PC gaming y streaming": {},
+      "Videojuegos y más": {},
+      "Otros artículos de gaming": {}
+    }
   },
   "Deporte y ocio": {
+    "Baloncesto": {},
+    "Manualidades": {},
+    "Estáticas y elípticas": {},
     "Fitness, running y yoga": {},
-    "Pádel y tenis": {},
-    "Montaña y escalada": {},
-    "Otros deportes": {}
+    "Golf": {},
+    "Balonmano": {},
+    "Montaña y esquí": {},
+    "Otros deportes": {},
+    "Juegos recreativos y de mesa": {},
+    "Rugby": {},
+    "Patinetes y patinaje": {},
+    "Fútbol": {},
+    "Natación y accesorios piscina": {},
+    "Tenis y pádel": {},
+    "Vóley": {},
+    "Otros": {}
   },
-  "Construcción y reformas": {
-    "Herramientas y maquinaria": {
-      "Herramientas": {},
-      "Herramientas eléctricas": {},
-      "Maquinaria": {}
+  "Bicicletas": {
+    "Accesorios para bicicletas": {
+      "Portabicicletas": {},
+      "Electrónica para bicicletas": {},
+      "Luces": {},
+      "Bombas e infladores": {},
+      "Rodillos": {}
     },
-    "Ferretería": {},
-    "Electricidad e Iluminación": {},
-    "Pinturas y barnices": {},
-    "Fontanería": {},
-    "Madera y otros materiales": {}
+    "Piezas y recambios de bici": {
+      "Piezas": {},
+      "Cuadros": {},
+      "Sillín": {},
+      "Recambios": {},
+      "Neumáticos y cámaras": {},
+      "Herramientas": {},
+      "Ruedas": {}
+    },
+    "Bicicletas y triciclos": {
+      "Bicicletas ciudad": {},
+      "Bicicletas eléctricas": {},
+      "Fixies": {},
+      "Bicicletas plegables": {},
+      "Bicicletas Infantiles": {},
+      "MTB": {},
+      "Bicicletas de carretera": {},
+      "Triciclos": {},
+      "Monociclos": {}
+    },
+    "Protección y vestimenta": {
+      "Zapatillas y cubrezapatillas": {},
+      "Ropa ciclismo": {},
+      "Gafas ciclismo y de sol": {},
+      "Cascos": {},
+      "Alforjas": {}
+    },
+    "Otros": {}
   },
-  "Industria y agricultura": {
-    "Industria": {
-      "Equipamiento industrial": {},
-      "Herramientas": {},
-      "Repuestos de maquinaria": {}
+  "Hogar y jardín": {
+    "Muebles y organización": {
+      "Camas y accesorios": {},
+      "Mesas y mesitas": {},
+      "Muebles de almacenaje": {},
+      "Sofás y sillones": {},
+      "Sillas y taburetes": {},
+      "Set de muebles": {},
+      "Carritos": {},
+      "Cajas y organizadores": {},
+      "Antigüedades": {}
     },
-    "Agricultura": {
-      "Vehículos": {},
-      "Maquinaria agrícola": {}
+    "Baño y accesorios": {
+      "Inodoros y bidet": {},
+      "Duchas y bañeras": {},
+      "Picas y muebles baño": {},
+      "Grifería de baño": {},
+      "Textiles de baño": {},
+      "Accesorios baño": {}
+    },
+    "Cocina": {
+      "Menaje para cocinar, comer y beber": {},
+      "Picas y muebles cocina": {},
+      "Grifería de cocina": {},
+      "Textiles de cocina y comedor": {},
+      "Accesorios": {}
+    },
+    "Decoración y espejos": {
+      "Fundas y cojines de sofá": {},
+      "Decoración para pared y colgar": {},
+      "Decoración para festividades": {},
+      "Espejos": {},
+      "Cortinas": {},
+      "Alfombras": {},
+      "Jarrones y figuras decorativas": {},
+      "Velas y portavelas": {},
+      "Otros": {}
+    },
+    "Iluminación": {
+      "Apliques, lámparas, pantallas y bases": {},
+      "Bombillas": {},
+      "Luces decorativas y de exterior": {},
+      "Iluminación inteligente": {},
+      "Accesorios de iluminación": {}
+    },
+    "Jardín y exteriores": {
+      "Muebles para exterior": {},
+      "Decoración": {},
+      "Plantas y jardinería": {},
+      "Barbacoas": {},
+      "Piscinas, spa y duchas de exterior": {},
+      "Maquinaria de jardín": {},
+      "Cesped, vallas y paneles": {},
+      "Accesorios": {}
+    },
+    "Calefacción y climatización": {
+      "Chimeneas, Estufas y radiadores": {},
+      "Aire acondicionado y ventiladores": {},
+      "Combustibles y pellet": {},
+      "Termostatos y válvulas termostáticas": {},
+      "Calderas y termos eléctricos": {},
+      "Purificador y humificador": {},
+      "Otros": {}
+    },
+    "Artículos para mascotas": {
+      "Accesorios de paseo": {},
+      "Camas": {},
+      "Corrales": {},
+      "Higiene": {},
+      "Jaulas": {},
+      "Juguetes": {}
+    }
+  },
+  "Electrodomésticos": {
+    "Electrodomésticos de cocina": {},
+    "Lavandería y plancha": {},
+    "Piezas y recambios": {},
+    "Pequeños electrodomésticos": {},
+    "Vitrocerámica": {},
+    "Otros": {}
+  },
+  "Cine, libros y música": {
+    "Libros, cómics y revistas": {
+      "Libros": {},
+      "Cómics y novelas gráficas": {},
+      "Revistas": {}
+    },
+    "Cine y series": {
+      "Pósters y merchandising de cine y TV": {},
+      "Películas y Series": {}
+    },
+    "Música": {
+      "CDs, Vinilos y Casetes": {},
+      "Pósters y merchandising de música": {},
+      "Instrumentos musicales": {},
+      "Equipo profesional de sonido": {},
+      "Partituras y libretos": {}
     }
   },
   "Niños y bebés": {
-    "Ropa infantil": {},
-    "Juguetes, juegos y peluches": {},
-    "Transporte del bebé": {},
-    "Mobiliario infantil": {}
+    "Alimentación del bebé": {
+      "Biberones & calientabiberones": {},
+      "Batidoras y mezcladores": {},
+      "Baberos y paños": {},
+      "Chupetes": {},
+      "Utensilios y cubertería": {}
+    },
+    "Mobiliario infantil": {},
+    "Transporte del bebé": {
+      "Sillas de coche": {},
+      "Cochecitos": {},
+      "Portabebés": {},
+      "Sillas de paseo": {}
+    },
+    "Accesorios de baño": {},
+    "Ropa infantil": {
+      "0-6 meses (68 cm)": {},
+      "6-9 meses (74 cm)": {},
+      "9-12 meses (80 cm)": {},
+      "12-18 meses (86 cm)": {},
+      "18-24 meses (92 cm)": {},
+      "2-3 años (98 cm)": {},
+      "3-4 años (104 cm)": {},
+      "4-5 años (110 cm)": {},
+      "6-7 años (116 cm)": {},
+      "8-9 años (130 cm)": {},
+      "10-12 años (150 cm)": {},
+      "13-14 años (164 cm)": {}
+    },
+    "Disfraces infantiles": {},
+    "Cunas y camas": {
+      "Camas infantiles": {},
+      "Ropa de cama infantil": {},
+      "Iluminación infantil": {},
+      "Cunas": {},
+      "Ropa de cuna": {},
+      "Sacos de dormir": {}
+    },
+    "Tronas y andadores": {
+      "Andadores": {},
+      "Tronas": {},
+      "Correpasillos": {}
+    },
+    "Artículos de maternidad": {
+      "Lactancia": {},
+      "Libros para madres y padres": {}
+    },
+    "Seguridad y cuidado": {
+      "Monitores para bebés": {},
+      "Termómetros para bebés": {},
+      "Pegatinas para el coche": {},
+      "Puertas de seguridad y parques": {},
+      "Arneses de seguridad": {}
+    },
+    "Artículos escolares": {
+      "Mochilas": {},
+      "Porta meriendas": {},
+      "Uniformes": {}
+    },
+    "Juguetes, juegos y peluches": {
+      "Juegos de mesa": {},
+      "Peluches": {},
+      "Juguetes": {}
+    },
+    "Otros": {}
   },
-  "Cine, libros y música": {
-    "Libros, cómics y revistas": {},
-    "Películas y series": {},
-    "Música y vinilos": {},
-    "Instrumentos musicales": {}
+  "Construcción y reformas": {
+    "Balcones": {},
+    "Puertas y ventanas": {
+      "Puertas": {},
+      "Cristales": {},
+      "Puertas correderas": {},
+      "Ventanas": {}
+    },
+    "Electricidad e Iluminación": {},
+    "Pavimentos y revestimientos": {
+      "Parquet": {},
+      "Baldosas y azulejos": {}
+    },
+    "Ferretería": {},
+    "Escaleras y andamios": {},
+    "Pinturas y barnices": {
+      "Pinturas": {},
+      "Barnices": {}
+    },
+    "Herramientas y maquinaria": {
+      "Herramientas eléctricas": {},
+      "Maquinaria": {},
+      "Herramientas": {}
+    },
+    "Madera y otros materiales": {},
+    "Otros": {}
   },
-  "Bicicletas": {}
+  "Industria y agricultura": {
+    "Agricultura": {
+      "Insumos agrícolas": {},
+      "Herramientas agrícolas": {},
+      "Maquinaria": {},
+      "Repuestos": {},
+      "Tractores": {},
+      "Vehículos": {}
+    },
+    "Industria": {
+      "Equipamiento industrial": {},
+      "Insumos industriales": {},
+      "Repuestos de maquinaria": {},
+      "Repuestos de herramientas": {},
+      "Herramientas": {}
+    }
+  }
 }

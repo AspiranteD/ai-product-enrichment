@@ -31,7 +31,7 @@ DELAY_BETWEEN_STEPS = 2.0
 @dataclass
 class EnrichmentResult:
     """Detailed result of each pipeline stage."""
-    item_id: str
+    lpn: str
     scraping: Optional[str] = None
     categorization: Optional[str] = None
     description: Optional[str] = None
@@ -48,7 +48,7 @@ class EnrichmentResult:
 
     def to_dict(self) -> dict:
         return {
-            "item_id": self.item_id,
+            "lpn": self.lpn,
             "scraping": self.scraping,
             "categorization": self.categorization,
             "description": self.description,
@@ -98,8 +98,8 @@ class EnrichmentPipeline:
         Returns:
             EnrichmentResult with per-stage status and any errors.
         """
-        result = EnrichmentResult(item_id=item_id or str(getattr(item, "id", "")))
-        logger.info("Enrich START: %s", result.item_id)
+        result = EnrichmentResult(lpn=item_id or str(getattr(item, "id", "")))
+        logger.info("Enrich START: %s", result.lpn)
 
         self._step_scraping(item, result)
 
@@ -112,7 +112,7 @@ class EnrichmentPipeline:
 
         logger.info(
             "Enrich DONE: %s | scraping=%s cat=%s desc=%s listing=%s",
-            result.item_id, result.scraping, result.categorization,
+            result.lpn, result.scraping, result.categorization,
             result.description, result.listing_updated,
         )
         return result
@@ -129,10 +129,10 @@ class EnrichmentPipeline:
         On failure: increments attempt counter and flags for manual review
         when max attempts reached.
         """
-        sku = (getattr(item, "sku", "") or "").strip()
-        if not sku:
+        asin = (getattr(item, "asin", "") or "").strip()
+        if not asin:
             result.scraping = "skipped"
-            logger.info("  Scraping SKIP: %s no SKU", result.item_id)
+            logger.info("  Scraping SKIP: %s no ASIN", result.lpn)
             return
 
         attempts = getattr(item, "scraping_attempts", 0) or 0
@@ -140,18 +140,18 @@ class EnrichmentPipeline:
             result.scraping = "max_attempts"
             logger.info(
                 "  Scraping SKIP: %s has %d attempts (max=%d)",
-                result.item_id, attempts, self.config.max_scraping_attempts,
+                result.lpn, attempts, self.config.max_scraping_attempts,
             )
             return
 
-        has_description = bool(getattr(item, "source_description", None))
+        has_description = bool(getattr(item, "amazon_description", None))
         has_images = bool(getattr(item, "image_urls", None))
-        has_features = bool(getattr(item, "source_features", None))
+        has_features = bool(getattr(item, "amazon_features", None))
         has_price = getattr(item, "scraped_price", None) is not None
 
         if has_description and has_images and has_features and has_price:
             result.scraping = "skipped"
-            logger.info("  Scraping SKIP: %s already has all data", result.item_id)
+            logger.info("  Scraping SKIP: %s already has all data", result.lpn)
             return
 
         if not self.config.scrape_fn:
@@ -160,38 +160,38 @@ class EnrichmentPipeline:
             return
 
         try:
-            data = self.config.scrape_fn(sku)
+            data = self.config.scrape_fn(asin)
 
             if data is None:
                 item.scraping_attempts = attempts + 1
                 if item.scraping_attempts >= self.config.max_scraping_attempts:
                     item.scraping_needs_manual = True
                     logger.warning(
-                        "  Scraping MANUAL: %s SKU=%s reached max attempts (%d)",
-                        result.item_id, sku, item.scraping_attempts,
+                        "  Scraping MANUAL: %s ASIN=%s reached max attempts (%d)",
+                        result.lpn, asin, item.scraping_attempts,
                     )
                 result.scraping = "failed"
-                result.errors.append(f"Scraping failed for SKU {sku} (attempt {item.scraping_attempts})")
+                result.errors.append(f"Scraping failed for ASIN {asin} (attempt {item.scraping_attempts})")
                 return
 
-            if data.get("title") and not getattr(item, "source_description", None):
-                item.source_description = data["title"]
+            if data.get("title") and not getattr(item, "amazon_description", None):
+                item.amazon_description = data["title"]
             if data.get("images") and not getattr(item, "image_urls", None):
                 item.image_urls = data["images"]
-            if data.get("features") and not getattr(item, "source_features", None):
-                item.source_features = data["features"]
+            if data.get("features") and not getattr(item, "amazon_features", None):
+                item.amazon_features = data["features"]
             if data.get("price") is not None and getattr(item, "scraped_price", None) is None:
                 item.scraped_price = data["price"]
             elif data.get("price") is None:
                 item.scraping_attempts = attempts + 1
 
             result.scraping = "ok"
-            logger.info("  Scraping OK: %s SKU=%s", result.item_id, sku)
+            logger.info("  Scraping OK: %s ASIN=%s", result.lpn, asin)
 
         except Exception as e:
             result.scraping = "failed"
             result.errors.append(f"Scraping error: {e}")
-            logger.error("  Scraping ERROR: %s - %s", result.item_id, e)
+            logger.error("  Scraping ERROR: %s - %s", result.lpn, e)
 
     def _step_categorization(self, item: Any, result: EnrichmentResult):
         """
@@ -200,44 +200,44 @@ class EnrichmentPipeline:
         Uses three-tier hierarchy: direct mapping → AI → fallback.
         Skips if category already assigned.
         """
-        current_category = (getattr(item, "marketplace_category", "") or "").strip()
+        current_category = (getattr(item, "wallapop_category", "") or "").strip()
         if current_category:
             result.categorization = "skipped"
-            logger.info("  Categorization SKIP: %s already has '%s'", result.item_id, current_category)
+            logger.info("  Categorization SKIP: %s already has '%s'", result.lpn, current_category)
             return
 
-        dept = (getattr(item, "source_department", "") or "").strip()
-        cat = (getattr(item, "source_category", "") or "").strip()
-        desc = (getattr(item, "source_description", "") or "").strip()
+        dept = (getattr(item, "amazon_department", "") or "").strip()
+        cat = (getattr(item, "amazon_category", "") or "").strip()
+        desc = (getattr(item, "amazon_description", "") or "").strip()
 
         if not dept and not cat and not desc:
             result.categorization = "no_data"
-            logger.info("  Categorization SKIP: %s no department/category/description", result.item_id)
+            logger.info("  Categorization SKIP: %s no department/category/description", result.lpn)
             return
 
         try:
             category = self.mapper.classify(
                 department=dept,
                 category=cat,
-                subcategory=(getattr(item, "source_subcategory", "") or "").strip(),
+                subcategory=(getattr(item, "amazon_subcategory", "") or "").strip(),
                 description=desc,
-                features=(getattr(item, "source_features", "") or "").strip(),
+                features=(getattr(item, "amazon_features", "") or "").strip(),
                 use_ai=self.config.use_ai_categorization,
             )
 
             if category and category.strip():
-                item.marketplace_category = category
+                item.wallapop_category = category
                 result.categorization = "ok"
-                logger.info("  Categorization OK: %s -> '%s'", result.item_id, category)
+                logger.info("  Categorization OK: %s -> '%s'", result.lpn, category)
             else:
                 result.categorization = "failed"
                 result.errors.append("Categorization returned empty")
-                logger.warning("  Categorization FAIL: %s empty result", result.item_id)
+                logger.warning("  Categorization FAIL: %s empty result", result.lpn)
 
         except Exception as e:
             result.categorization = "failed"
             result.errors.append(f"Categorization error: {e}")
-            logger.error("  Categorization ERROR: %s - %s", result.item_id, e)
+            logger.error("  Categorization ERROR: %s - %s", result.lpn, e)
 
     def _step_description(self, item: Any, result: EnrichmentResult):
         """
@@ -251,10 +251,10 @@ class EnrichmentPipeline:
 
         Skips if all enrichment fields are already populated.
         """
-        desc = (getattr(item, "source_description", "") or "").strip()
+        desc = (getattr(item, "amazon_description", "") or "").strip()
         if not desc:
             result.description = "no_data"
-            logger.info("  Description SKIP: %s no source_description", result.item_id)
+            logger.info("  Description SKIP: %s no amazon_description", result.lpn)
             return
 
         already_has = all([
@@ -267,26 +267,26 @@ class EnrichmentPipeline:
         ])
         if already_has:
             result.description = "skipped"
-            logger.info("  Description SKIP: %s all fields populated", result.item_id)
+            logger.info("  Description SKIP: %s all fields populated", result.lpn)
             return
 
         try:
-            features = (getattr(item, "source_features", "") or "").strip()
-            sku = (getattr(item, "sku", "") or "").strip()
+            features = (getattr(item, "amazon_features", "") or "").strip()
+            asin = (getattr(item, "asin", "") or "").strip()
 
             existing_titles: list[str] = []
-            if sku and self.config.get_existing_titles_fn:
-                existing_titles = self.config.get_existing_titles_fn(sku, item)
+            if asin and self.config.get_existing_titles_fn:
+                existing_titles = self.config.get_existing_titles_fn(asin, item)
 
             enrichment = generate_listing_content(
-                desc, features, sku=sku,
+                desc, features, sku=asin,
                 existing_titles=existing_titles or None,
             )
 
             if not enrichment:
                 result.description = "failed"
                 result.errors.append("AI returned no content")
-                logger.warning("  Description FAIL: %s AI returned None", result.item_id)
+                logger.warning("  Description FAIL: %s AI returned None", result.lpn)
                 return
 
             updated = apply_enrichment(item, enrichment)
@@ -294,16 +294,16 @@ class EnrichmentPipeline:
                 result.description = "ok"
                 logger.info(
                     "  Description OK: %s title='%s'",
-                    result.item_id, enrichment.get("titulo_wallapop", ""),
+                    result.lpn, enrichment.get("titulo_wallapop", ""),
                 )
             else:
                 result.description = "skipped"
-                logger.info("  Description SKIP: %s no new fields", result.item_id)
+                logger.info("  Description SKIP: %s no new fields", result.lpn)
 
         except Exception as e:
             result.description = "failed"
             result.errors.append(f"Description error: {e}")
-            logger.error("  Description ERROR: %s - %s", result.item_id, e)
+            logger.error("  Description ERROR: %s - %s", result.lpn, e)
 
     def _step_update_listing(self, item: Any, result: EnrichmentResult):
         """
@@ -318,7 +318,7 @@ class EnrichmentPipeline:
         description = build_listing_description(item)
 
         if not title and not description:
-            logger.info("  Listing SKIP: %s no title/description to propagate", result.item_id)
+            logger.info("  Listing SKIP: %s no title/description to propagate", result.lpn)
             return
 
         if not self.config.update_listing_fn:
@@ -328,10 +328,10 @@ class EnrichmentPipeline:
         try:
             self.config.update_listing_fn(item, title, description)
             result.listing_updated = True
-            logger.info("  Listing UPDATE: %s", result.item_id)
+            logger.info("  Listing UPDATE: %s", result.lpn)
         except Exception as e:
             result.errors.append(f"Listing update error: {e}")
-            logger.error("  Listing UPDATE ERROR: %s - %s", result.item_id, e)
+            logger.error("  Listing UPDATE ERROR: %s - %s", result.lpn, e)
 
 
 def enrich_item(item: Any, config: PipelineConfig | None = None, item_id: str = "") -> dict:

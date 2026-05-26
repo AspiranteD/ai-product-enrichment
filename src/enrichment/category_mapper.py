@@ -2,11 +2,11 @@
 Three-tier product categorization for marketplace listings.
 
 Classification hierarchy:
-1. Direct mapping — JSON lookup from source department/category to marketplace category.
+1. Direct mapping — JSON lookup from Amazon department/category to Wallapop category.
    Covers ~80% of items with zero API cost.
 2. AI classification — OpenAI call with the full category taxonomy as context.
    Used when no mapping exists. Costs ~$0.001 per item.
-3. Department fallback — Hardcoded map from source department to a safe default.
+3. Department fallback — Hardcoded map from Amazon department to a safe default.
    Guarantees every item gets a category.
 
 The category taxonomy is loaded from a JSON tree and flattened into valid
@@ -50,7 +50,7 @@ DEPARTMENT_FALLBACK = {
 
 class CategoryMapper:
     """
-    Maps source department/category pairs to marketplace categories
+    Maps Amazon department/category pairs to Wallapop categories
     using a three-tier classification strategy.
     """
 

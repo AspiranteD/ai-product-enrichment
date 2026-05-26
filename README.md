@@ -4,7 +4,7 @@ Production-grade pipeline that transforms raw product data into marketplace-opti
 
 ## What It Does
 
-Takes a product with basic source data (title, features, department) and produces a complete marketplace-ready listing:
+Takes a product with basic Amazon data (title, features, department) and produces a complete Wallapop-ready listing:
 
 ```
 INPUT:  "Sony WH-1000XM5 Wireless Noise Cancelling Headphones"
@@ -51,10 +51,10 @@ OUTPUT: Title:       "Sony WH-1000XM5 auriculares bluetooth"
 ## Key Design Decisions
 
 ### Three-Tier Categorization
-Not every item needs an AI call. The system checks a 600+ rule JSON mapping first (covers ~80% of items at zero cost), falls back to AI classification, and guarantees a category via department-level fallback. This reduced our OpenAI spend by ~80%.
+Not every item needs an AI call. The system checks a 600+ rule JSON mapping first (Amazon department/category → Wallapop category, covers ~80% of items at zero cost), falls back to AI classification, and guarantees a category via department-level fallback. This reduced our OpenAI spend by ~80%.
 
 ### Title Deduplication
-When multiple items share the same SKU (e.g., same product in different conditions), the pipeline queries existing titles and instructs the AI to differentiate — by including model numbers, capacities, voltages, or other unique attributes. This prevents duplicate listings that confuse buyers.
+When multiple items share the same ASIN (e.g., same product in different conditions), the pipeline queries existing titles and instructs the AI to differentiate — by including model numbers, capacities, voltages, or other unique attributes. This prevents duplicate listings that confuse buyers.
 
 ### Idempotent Writes
 Every stage only writes to empty fields and never overwrites existing data. This makes the pipeline safe to re-run on partially enriched items, and ensures manual edits are preserved.
@@ -84,8 +84,8 @@ The pipeline accepts functions for data access (scraping, title lookup, listing 
 │       ├── generate_descriptions.py # Batch description CLI
 │       └── categorize_items.py      # Batch categorization CLI
 ├── data/
-│   ├── category_mapping.json        # 600+ direct mapping rules
-│   └── category_taxonomy.json       # Full marketplace category tree
+│   ├── category_mapping.json        # 600+ Amazon→Wallapop mapping rules
+│   └── category_taxonomy.json       # Full Wallapop category tree
 ├── tests/
 │   ├── test_pipeline.py             # 20+ pipeline stage tests
 │   ├── test_category_mapper.py      # 3-tier hierarchy tests
@@ -159,4 +159,4 @@ if has_risk_word(title, description):
 - **Python 3.11+**
 - **OpenAI API** (gpt-4o-mini) — JSON structured output for content generation, text mode for classification
 - **Regex engine** — 30+ compiled patterns for policy compliance
-- **pytest** — 60+ unit tests with mocked API calls
+- **pytest** — 110+ unit tests with mocked API calls

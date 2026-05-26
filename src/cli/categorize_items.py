@@ -80,7 +80,7 @@ def run_batch(
     Categorize a batch of items.
 
     Args:
-        items: List of item objects with source_department, source_category, etc.
+        items: List of item objects with amazon_department, amazon_category, etc.
         config: Batch configuration.
         mapper: CategoryMapper instance (created if not provided).
         commit_fn: Callable(batch_count) for persistence.
@@ -93,9 +93,9 @@ def run_batch(
 
     if config.dry_run:
         for i, item in enumerate(items, 1):
-            dept = getattr(item, "source_department", "") or ""
-            cat = getattr(item, "source_category", "") or ""
-            desc = (getattr(item, "source_description", "") or "")[:50]
+            dept = getattr(item, "amazon_department", "") or ""
+            cat = getattr(item, "amazon_category", "") or ""
+            desc = (getattr(item, "amazon_description", "") or "")[:50]
             item_id = getattr(item, "id", f"item-{i}")
             logger.info(
                 "  [%d] ID=%s dept='%s' cat='%s' desc='%s...'",
@@ -106,11 +106,11 @@ def run_batch(
 
     batch_count = 0
     for i, item in enumerate(items, 1):
-        dept = (getattr(item, "source_department", "") or "").strip()
-        cat = (getattr(item, "source_category", "") or "").strip()
-        subcat = (getattr(item, "source_subcategory", "") or "").strip()
-        desc = (getattr(item, "source_description", "") or "").strip()
-        features = (getattr(item, "source_features", "") or "").strip()
+        dept = (getattr(item, "amazon_department", "") or "").strip()
+        cat = (getattr(item, "amazon_category", "") or "").strip()
+        subcat = (getattr(item, "amazon_subcategory", "") or "").strip()
+        desc = (getattr(item, "amazon_description", "") or "").strip()
+        features = (getattr(item, "amazon_features", "") or "").strip()
         item_id = getattr(item, "id", f"item-{i}")
 
         logger.info("[%d/%d] ID=%s dept='%s' cat='%s'", i, stats.total, item_id, dept[:30], cat[:30])
@@ -137,7 +137,7 @@ def run_batch(
         else:
             stats.by_ai += 1
 
-        item.marketplace_category = category
+        item.wallapop_category = category
         batch_count += 1
         logger.info("  -> %s", category)
 

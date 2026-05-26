@@ -15,17 +15,17 @@ def _make_item(**kwargs):
     """Create a mock item with sensible defaults."""
     defaults = {
         "id": "TEST-001",
-        "sku": "B0BX2K9GQ6",
-        "source_description": "Sony WH-1000XM5 Wireless Headphones",
-        "source_features": "30h battery, Bluetooth 5.2",
-        "source_department": "Electronics",
-        "source_category": "Headphones",
-        "source_subcategory": "",
+        "asin": "B0BX2K9GQ6",
+        "amazon_description": "Sony WH-1000XM5 Wireless Headphones",
+        "amazon_features": "30h battery, Bluetooth 5.2",
+        "amazon_department": "Electronics",
+        "amazon_category": "Headphones",
+        "amazon_subcategory": "",
         "image_urls": None,
         "scraped_price": None,
         "scraping_attempts": 0,
         "scraping_needs_manual": False,
-        "marketplace_category": None,
+        "wallapop_category": None,
         "wallapop_title": None,
         "wallapop_description": None,
         "keywords": None,
@@ -41,29 +41,29 @@ class TestEnrichmentResult:
     """Tests for the result data class."""
 
     def test_success_when_all_ok(self):
-        r = EnrichmentResult(item_id="X")
+        r = EnrichmentResult(lpn="X")
         r.scraping = "ok"
         r.categorization = "ok"
         r.description = "ok"
         assert r.success is True
 
     def test_success_when_skipped(self):
-        r = EnrichmentResult(item_id="X")
+        r = EnrichmentResult(lpn="X")
         r.scraping = "skipped"
         r.categorization = "ok"
         r.description = "skipped"
         assert r.success is True
 
     def test_failure_when_errors(self):
-        r = EnrichmentResult(item_id="X")
+        r = EnrichmentResult(lpn="X")
         r.errors.append("Something broke")
         r.scraping = "failed"
         assert r.success is False
 
     def test_to_dict_contains_all_fields(self):
-        r = EnrichmentResult(item_id="X")
+        r = EnrichmentResult(lpn="X")
         d = r.to_dict()
-        assert "item_id" in d
+        assert "lpn" in d
         assert "scraping" in d
         assert "categorization" in d
         assert "description" in d
@@ -75,29 +75,29 @@ class TestEnrichmentResult:
 class TestScrapingStage:
     """Stage 1: External data fetching."""
 
-    def test_skip_without_sku(self):
-        item = _make_item(sku="")
+    def test_skip_without_asin(self):
+        item = _make_item(asin="")
         pipeline = EnrichmentPipeline(PipelineConfig(scrape_fn=lambda x: None))
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_scraping(item, result)
         assert result.scraping == "skipped"
 
     def test_skip_max_attempts(self):
         item = _make_item(scraping_attempts=5)
         pipeline = EnrichmentPipeline(PipelineConfig(max_scraping_attempts=5))
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_scraping(item, result)
         assert result.scraping == "max_attempts"
 
     def test_skip_all_data_present(self):
         item = _make_item(
-            source_description="desc",
+            amazon_description="desc",
             image_urls="img.jpg",
-            source_features="features",
+            amazon_features="features",
             scraped_price=29.99,
         )
         pipeline = EnrichmentPipeline(PipelineConfig(scrape_fn=lambda x: {}))
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_scraping(item, result)
         assert result.scraping == "skipped"
 
@@ -105,18 +105,18 @@ class TestScrapingStage:
         def mock_scrape(sku):
             return {"title": "Product", "images": "img.jpg", "features": "f", "price": 10.0}
 
-        item = _make_item(source_description=None, image_urls=None, source_features=None)
+        item = _make_item(amazon_description=None, image_urls=None, amazon_features=None)
         pipeline = EnrichmentPipeline(PipelineConfig(scrape_fn=mock_scrape))
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_scraping(item, result)
         assert result.scraping == "ok"
-        assert item.source_description == "Product"
+        assert item.amazon_description == "Product"
         assert item.scraped_price == 10.0
 
     def test_scrape_none_increments_attempts(self):
         item = _make_item(scraping_attempts=2)
         pipeline = EnrichmentPipeline(PipelineConfig(scrape_fn=lambda x: None))
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_scraping(item, result)
         assert result.scraping == "failed"
         assert item.scraping_attempts == 3
@@ -124,14 +124,14 @@ class TestScrapingStage:
     def test_scrape_max_marks_manual(self):
         item = _make_item(scraping_attempts=4)
         pipeline = EnrichmentPipeline(PipelineConfig(scrape_fn=lambda x: None, max_scraping_attempts=5))
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_scraping(item, result)
         assert item.scraping_needs_manual is True
 
     def test_scrape_no_fn_skips(self):
         item = _make_item()
         pipeline = EnrichmentPipeline(PipelineConfig(scrape_fn=None))
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_scraping(item, result)
         assert result.scraping == "skipped"
 
@@ -141,7 +141,7 @@ class TestScrapingStage:
 
         item = _make_item()
         pipeline = EnrichmentPipeline(PipelineConfig(scrape_fn=boom))
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_scraping(item, result)
         assert result.scraping == "failed"
         assert any("timeout" in e for e in result.errors)
@@ -152,17 +152,17 @@ class TestCategorizationStage:
 
     @patch("src.enrichment.pipeline.CategoryMapper")
     def test_skip_already_categorized(self, MockMapper):
-        item = _make_item(marketplace_category="Tecnología")
+        item = _make_item(wallapop_category="Tecnología")
         pipeline = EnrichmentPipeline()
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_categorization(item, result)
         assert result.categorization == "skipped"
 
     @patch("src.enrichment.pipeline.CategoryMapper")
     def test_no_data_skip(self, MockMapper):
-        item = _make_item(source_department="", source_category="", source_description="")
+        item = _make_item(amazon_department="", amazon_category="", amazon_description="")
         pipeline = EnrichmentPipeline()
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_categorization(item, result)
         assert result.categorization == "no_data"
 
@@ -173,11 +173,11 @@ class TestCategorizationStage:
 
         pipeline = EnrichmentPipeline()
         pipeline._mapper = mock_mapper
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_categorization(item, result)
 
         assert result.categorization == "ok"
-        assert item.marketplace_category == "Tecnología y electrónica > Audio"
+        assert item.wallapop_category == "Tecnología y electrónica > Audio"
 
     def test_categorization_empty_fails(self):
         item = _make_item()
@@ -186,7 +186,7 @@ class TestCategorizationStage:
 
         pipeline = EnrichmentPipeline()
         pipeline._mapper = mock_mapper
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_categorization(item, result)
 
         assert result.categorization == "failed"
@@ -196,9 +196,9 @@ class TestDescriptionStage:
     """Stage 3: AI content generation."""
 
     def test_skip_no_description(self):
-        item = _make_item(source_description="")
+        item = _make_item(amazon_description="")
         pipeline = EnrichmentPipeline()
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_description(item, result)
         assert result.description == "no_data"
 
@@ -212,7 +212,7 @@ class TestDescriptionStage:
             hashtags="H",
         )
         pipeline = EnrichmentPipeline()
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_description(item, result)
         assert result.description == "skipped"
 
@@ -231,7 +231,7 @@ class TestDescriptionStage:
         }
         item = _make_item()
         pipeline = EnrichmentPipeline()
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_description(item, result)
 
         assert result.description == "ok"
@@ -242,7 +242,7 @@ class TestDescriptionStage:
         mock_gen.return_value = None
         item = _make_item()
         pipeline = EnrichmentPipeline()
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_description(item, result)
         assert result.description == "failed"
 
@@ -256,7 +256,7 @@ class TestDescriptionStage:
         item = _make_item()
         config = PipelineConfig(get_existing_titles_fn=get_titles)
         pipeline = EnrichmentPipeline(config)
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_description(item, result)
 
         call_kwargs = mock_gen.call_args
@@ -269,7 +269,7 @@ class TestListingUpdateStage:
     def test_skip_no_content(self):
         item = _make_item(wallapop_title="", wallapop_description="")
         pipeline = EnrichmentPipeline()
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_update_listing(item, result)
         assert result.listing_updated is False
 
@@ -282,7 +282,7 @@ class TestListingUpdateStage:
         item = _make_item(wallapop_title="Title", wallapop_description="Desc")
         config = PipelineConfig(update_listing_fn=mock_update)
         pipeline = EnrichmentPipeline(config)
-        result = EnrichmentResult(item_id="X")
+        result = EnrichmentResult(lpn="X")
         pipeline._step_update_listing(item, result)
 
         assert result.listing_updated is True
@@ -302,5 +302,5 @@ class TestConvenienceWrapper:
         result = enrich_item(item, item_id="TEST")
 
         assert isinstance(result, dict)
-        assert "item_id" in result
+        assert "lpn" in result
         assert "success" in result
