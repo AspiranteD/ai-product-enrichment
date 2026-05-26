@@ -1,0 +1,64 @@
+{
+  "Technology & Electronics": {
+    "Audio": {},
+    "Audio & Video": {},
+    "Photography": {},
+    "Computers": {},
+    "Tablets": {},
+    "Wearables": {},
+    "Mobile Phones": {},
+    "Gaming": {},
+    "Smart Home": {}
+  },
+  "Home & Garden": {
+    "Kitchen": {},
+    "Bedroom": {},
+    "Bathroom": {},
+    "Storage": {},
+    "Garden & Outdoor": {},
+    "Furniture": {},
+    "Decoration": {},
+    "Pet Supplies": {}
+  },
+  "Fashion & Accessories": {
+    "Women": {},
+    "Men": {},
+    "Jewelry": {},
+    "Watches": {},
+    "Bags & Backpacks": {},
+    "Beauty": {
+      "Personal Care": {},
+      "Makeup": {},
+      "Fragrance": {}
+    }
+  },
+  "Sports & Leisure": {
+    "Fitness": {},
+    "Outdoor": {},
+    "Team Sports": {},
+    "Cycling": {},
+    "Water Sports": {}
+  },
+  "Kids & Baby": {
+    "Toys & Games": {},
+    "Baby Gear": {},
+    "Children Clothing": {}
+  },
+  "Industry & Agriculture": {
+    "Equipment": {},
+    "Tools": {},
+    "Spare Parts": {},
+    "Agriculture": {}
+  },
+  "Construction & Renovation": {
+    "Electrical & Lighting": {},
+    "Plumbing": {},
+    "Hardware": {},
+    "Power Tools": {}
+  },
+  "Books & Media": {
+    "Books": {},
+    "Music": {},
+    "Movies": {}
+  }
+}

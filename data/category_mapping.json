@@ -1,0 +1,51 @@
+{
+  "Electronics": {
+    "Headphones": "Technology & Electronics > Audio",
+    "Cameras & Photography": "Technology & Electronics > Photography",
+    "Home Entertainment": "Technology & Electronics > Audio & Video",
+    "Computer Accessories": "Technology & Electronics > Computers",
+    "Tablets": "Technology & Electronics > Tablets",
+    "Wearable Technology": "Technology & Electronics > Wearables",
+    "": "Technology & Electronics"
+  },
+  "Home": {
+    "Kitchen & Dining": "Home & Garden > Kitchen",
+    "Bedding": "Home & Garden > Bedroom",
+    "Bath": "Home & Garden > Bathroom",
+    "Storage & Organization": "Home & Garden > Storage",
+    "Lighting": "Construction & Renovation > Electrical & Lighting",
+    "": "Home & Garden"
+  },
+  "Automotive": {
+    "Accessories": "Industry & Agriculture > Equipment",
+    "Tools & Equipment": "Industry & Agriculture > Tools",
+    "Spare Parts": "Industry & Agriculture > Spare Parts",
+    "": "Industry & Agriculture"
+  },
+  "Sports": {
+    "Exercise & Fitness": "Sports & Leisure > Fitness",
+    "Outdoor Recreation": "Sports & Leisure > Outdoor",
+    "Team Sports": "Sports & Leisure > Team Sports",
+    "": "Sports & Leisure"
+  },
+  "Toys": {
+    "Building Toys": "Kids & Baby > Toys & Games",
+    "Action Figures": "Kids & Baby > Toys & Games",
+    "Dolls": "Kids & Baby > Toys & Games",
+    "": "Kids & Baby > Toys & Games"
+  },
+  "Fashion": {
+    "Women": "Fashion & Accessories > Women",
+    "Men": "Fashion & Accessories > Men",
+    "Jewelry": "Fashion & Accessories > Jewelry",
+    "": "Fashion & Accessories"
+  },
+  "Health & Beauty": {
+    "Personal Care": "Fashion & Accessories > Beauty > Personal Care",
+    "Makeup": "Fashion & Accessories > Beauty > Makeup",
+    "": "Fashion & Accessories > Beauty"
+  },
+  "Pet Products": {
+    "": "Home & Garden > Pet Supplies"
+  }
+}
