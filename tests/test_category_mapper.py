@@ -94,4 +94,4 @@ class TestFlattenPaths:
         mapper = CategoryMapper(mapping_path=m, taxonomy_path=t)
         assert "Technology > Audio" in mapper.valid_paths
         assert "Home & Garden > Kitchen" in mapper.valid_paths
-        assert len(mapper.valid_paths) == 5
+        assert len(mapper.valid_paths) == 6

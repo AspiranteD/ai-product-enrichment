@@ -97,7 +97,7 @@ class TestStepDescription:
         _step_description(product, result)
         assert result.description == "skipped"
 
-    @patch("src.enrichment.pipeline.generate_listing_content")
+    @patch("src.enrichment.description_generator.generate_listing_content")
     def test_generates_content(self, mock_generate):
         mock_generate.return_value = {
             "listing_title": "Great Widget",
