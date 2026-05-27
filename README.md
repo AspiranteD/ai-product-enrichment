@@ -1,4 +1,5 @@
-# AI Product Enrichment Pipeline
+﻿# AI Product Enrichment Pipeline
+> **Portfolio context:** Extracted from founder-led production systems — multi-marketplace inventory, orders, and warehouse execution. **[Full portfolio](https://github.com/AspiranteD)** · [aspiranted.github.io](https://aspiranted.github.io)
 
 Production-grade pipeline that transforms raw product data into marketplace-optimized listings using AI. Built to process thousands of items daily across multiple marketplace accounts.
 
